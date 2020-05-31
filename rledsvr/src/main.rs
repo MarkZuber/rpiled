@@ -13,6 +13,7 @@ fn hello(name: String, age: u8) -> String {
 
 #[post("/", data = "<payload>")]
 fn display_text(payload: Json<DisplayTextRequest>) -> Json<DisplayTextResponse> {
+    rledlib::circles::run();
     Json(DisplayTextResponse {
         message: format!("We would be displaying text: {}", payload.0.text),
     })

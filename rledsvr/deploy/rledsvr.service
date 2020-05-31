@@ -1,0 +1,17 @@
+[Unit]
+Description=RPI LED Service
+DefaultDependencies=no
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10 
+SyslogIdentifier=rledsvr
+ExecStart=/var/rpiled/rledsvr
+WorkingDirectory=/var/rpiled
+PrivateTmp=true
+
+[Install]
+WantedBy = multi-user.target
