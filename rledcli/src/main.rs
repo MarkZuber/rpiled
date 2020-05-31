@@ -4,7 +4,7 @@ mod ledcli;
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
-    let lcli = ledcli::new("http://localhost:8000");
+    let lcli = ledcli::new("http://ledpi.local:8000");
     let resp = lcli.display_text("well now we're talking").await.unwrap();
     println!("resp = {:?}", resp.message);
 
