@@ -4,5 +4,6 @@ members = [
     "core",
     "rledcli",
     "rledsvr",
-    "rpiledbind"
+    "rpiledbind",
+    "rpiledcon"
 ]

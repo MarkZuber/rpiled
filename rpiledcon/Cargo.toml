@@ -1,10 +1,10 @@
 [package]
-name = "rpiledbind"
+name = "rpiledcon"
 version = "0.1.0"
-authors = ["Mark Zuber <mark@zube.com>"]
+authors = ["pi"]
 edition = "2018"
-links = "librgbmatrix"
-build = "build.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rledlib = { path = "../rledlib" }
