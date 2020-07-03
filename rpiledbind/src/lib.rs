@@ -7,6 +7,9 @@ mod bindings;
 
 use crate::bindings::*;
 use std::ffi::CString;
+use std::sync::Arc;
+use std::sync::Mutex;
+use std::sync::MutexGuard;
 
 /// LED Matrix Controller to enable communication with the ADAFruit RGB HAT on the
 /// Raspberry PI.
@@ -44,6 +47,24 @@ impl Drop for MatrixFont {
         self.delete();
     }
 }
+
+pub struct MatrixHolder {
+    matrix: Arc<Mutex<LedMatrix>>,
+}
+
+impl MatrixHolder {
+    pub fn new() -> Self {
+        Self {
+            matrix: Arc::new(Mutex::new(LedMatrix::new())),
+        }
+    }
+
+    pub fn lock_matrix(&mut self) -> MutexGuard<LedMatrix> {
+        self.matrix.lock().unwrap()
+    }
+}
+
+unsafe impl Send for MatrixHolder {}
 
 impl LedMatrix {
     /// Create a new LED Matrix.

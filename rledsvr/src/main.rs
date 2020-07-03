@@ -8,7 +8,6 @@ mod taskmgr;
 mod tasks;
 
 use std::env;
-use std::net::SocketAddr;
 use taskmgr::start_task_manager;
 
 mod filters {

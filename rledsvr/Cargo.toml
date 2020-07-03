@@ -8,7 +8,6 @@ edition = "2018"
 
 [dependencies]
 core = { path = "../core" }
-rledlib = { path = "../rledlib" }
 rpiledbind = { path = "../rpiledbind" }
 lazy_static = "1.4.0"
 log = "0.4.8"

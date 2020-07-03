@@ -1,10 +1,9 @@
 use crate::taskmgr::TaskError;
 use core::jobs::{Cancellable, LoopState};
-use rpiledbind::LedMatrix;
-use std::sync::{Arc, Mutex};
+use rpiledbind::MatrixHolder;
 
 pub struct CirclesTask {
-    matrix: Arc<Mutex<LedMatrix>>,
+    matrix: MatrixHolder,
     counter: u8,
     x: i32,
     y: i32,
@@ -13,12 +12,10 @@ pub struct CirclesTask {
     b: u8,
 }
 
-unsafe impl Send for CirclesTask {}
-
 impl CirclesTask {
     pub fn new(r: u8, g: u8, b: u8) -> Self {
         Self {
-            matrix: Arc::new(Mutex::new(LedMatrix::new())),
+            matrix: MatrixHolder::new(),
             counter: 0,
             x: 0,
             y: 16,
@@ -32,7 +29,7 @@ impl CirclesTask {
 impl Cancellable for CirclesTask {
     type Error = TaskError;
     fn for_each(&mut self) -> Result<LoopState, Self::Error> {
-        let mut matrix = self.matrix.lock().unwrap();
+        let mut matrix = self.matrix.lock_matrix();
         matrix.clear();
         matrix.draw_circle(
             self.x,
