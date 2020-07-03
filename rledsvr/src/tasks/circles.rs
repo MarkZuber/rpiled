@@ -1,28 +1,29 @@
 use crate::taskmgr::TaskError;
 use core::jobs::{Cancellable, LoopState};
-use rledlib::LedMatrix;
+use rpiledbind::LedMatrix;
+use std::sync::{Arc, Mutex};
 
 pub struct CirclesTask {
     matrix: LedMatrix,
     counter: u8,
-    x: u8,
-    y: u8,
+    x: i32,
+    y: i32,
     r: u8,
     g: u8,
     b: u8,
 }
 
 impl CirclesTask {
-    pub fn new(r: u8, g: u8, b: u8) -> Self {
-        Self {
-            matrix: new LedMatrix(),
+    pub fn new(r: u8, g: u8, b: u8) -> Arc<Mutex<Self>> {
+        Arc::new(Mutex::new(Self {
+            matrix: LedMatrix::new(),
             counter: 0,
-            x: 0_u8,
-            y: 16_u8,
+            x: 0,
+            y: 16,
             r,
             g,
-            b
-        }
+            b,
+        }))
     }
 }
 
@@ -39,7 +40,7 @@ impl Cancellable for CirclesTask {
             // self.b,
             self.r,
             self.g,
-            self.b
+            self.b,
         );
         self.matrix.swap_canvas();
 
@@ -47,9 +48,9 @@ impl Cancellable for CirclesTask {
         if self.x > self.matrix.width() {
             self.x = 0;
         }
-        self.i = self.i + 1;
-        if self.i > 100 {
-            self.i = 0;
+        self.counter = self.counter + 1;
+        if self.counter > 100 {
+            self.counter = 0;
         }
 
         Ok(LoopState::Continue)
