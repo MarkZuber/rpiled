@@ -8,6 +8,7 @@ mod taskmgr;
 mod tasks;
 
 use std::env;
+use std::net::SocketAddr;
 use taskmgr::start_task_manager;
 
 mod filters {
@@ -60,5 +61,5 @@ async fn main() {
 
     let api = filters::all();
     let routes = api; // .with(warp::log("execute"));
-    warp::serve(routes).run(([127, 0, 0, 1], 8000)).await
+    warp::serve(routes).run(([192, 168, 2, 235], 8000)).await
 }

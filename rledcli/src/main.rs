@@ -4,7 +4,7 @@ use std::{thread, time};
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
-    let lcli = ledcli::new("http://localhost:8000");
+    let lcli = ledcli::new("http://192.168.2.235:8000");
     let delay_secs = 1;
     // let phrases = vec![
     //     "well now we're talking",
@@ -19,9 +19,15 @@ async fn main() -> Result<(), reqwest::Error> {
     //     thread::sleep(time::Duration::from_secs(delay_secs));
     // }
 
-    for i in 0_u8..255_u8 {
-        lcli.draw_circles(i, i, i).await.unwrap();
-        thread::sleep(time::Duration::from_secs(delay_secs));
+    let step_value = 50;
+
+    for i in (0_u8..255_u8).step_by(step_value) {
+        for j in (0_u8..255_u8).step_by(step_value) {
+            for k in (0_u8..255_u8).step_by(step_value) {
+                lcli.draw_circles(i, j, k).await.unwrap();
+                thread::sleep(time::Duration::from_millis(500));
+            }
+        }
     }
 
     println!("stopping...");

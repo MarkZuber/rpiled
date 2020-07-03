@@ -4,7 +4,7 @@ use rpiledbind::LedMatrix;
 use std::sync::{Arc, Mutex};
 
 pub struct CirclesTask {
-    matrix: LedMatrix,
+    matrix: Arc<Mutex<LedMatrix>>,
     counter: u8,
     x: i32,
     y: i32,
@@ -13,39 +13,39 @@ pub struct CirclesTask {
     b: u8,
 }
 
+unsafe impl Send for CirclesTask {}
+
 impl CirclesTask {
-    pub fn new(r: u8, g: u8, b: u8) -> Arc<Mutex<Self>> {
-        Arc::new(Mutex::new(Self {
-            matrix: LedMatrix::new(),
+    pub fn new(r: u8, g: u8, b: u8) -> Self {
+        Self {
+            matrix: Arc::new(Mutex::new(LedMatrix::new())),
             counter: 0,
             x: 0,
             y: 16,
             r,
             g,
             b,
-        }))
+        }
     }
 }
 
 impl Cancellable for CirclesTask {
     type Error = TaskError;
     fn for_each(&mut self) -> Result<LoopState, Self::Error> {
-        self.matrix.clear();
-        self.matrix.draw_circle(
+        let mut matrix = self.matrix.lock().unwrap();
+        matrix.clear();
+        matrix.draw_circle(
             self.x,
             self.y,
-            ((self.x as f32).sin() * ((self.matrix.width() / 2) as f32)) as i32,
-            // self.x as u8,
-            // self.i as u8,
-            // self.b,
+            ((self.x as f32).sin() * ((matrix.width() / 2) as f32)) as i32,
             self.r,
             self.g,
             self.b,
         );
-        self.matrix.swap_canvas();
+        matrix.swap_canvas();
 
         self.x = self.x + 1;
-        if self.x > self.matrix.width() {
+        if self.x > matrix.width() {
             self.x = 0;
         }
         self.counter = self.counter + 1;
