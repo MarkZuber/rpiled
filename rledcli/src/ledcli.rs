@@ -14,6 +14,7 @@ impl LedCli {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn display_text(&self, message: &str) -> Result<(), reqwest::Error> {
         self.json_request(&TaskMessage::DisplayText {
             text: message.to_string(),

@@ -5,19 +5,6 @@ use std::{thread, time};
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
     let lcli = ledcli::new("http://192.168.2.235:8000");
-    let delay_secs = 1;
-    // let phrases = vec![
-    //     "well now we're talking",
-    //     "some other message",
-    //     "more message",
-    //     "the last message",
-    // ];
-
-    // for phrase in phrases {
-    //     println!("Sending: {}", phrase);
-    //     lcli.display_text(phrase).await.unwrap();
-    //     thread::sleep(time::Duration::from_secs(delay_secs));
-    // }
 
     let step_value = 50;
 
