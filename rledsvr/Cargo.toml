@@ -9,8 +9,11 @@ edition = "2018"
 [dependencies]
 core = { path = "../core" }
 rledlib = { path = "../rledlib" }
+lazy_static = "1.4.0"
+log = "0.4.8"
+pretty_env_logger = "0.4.0"
 serde = "1.0"
-serde_json = "1.0"
 serde_derive = "1.0"
-rocket = "0.4.5"
-rocket_contrib = "0.4.5"
+serde_json = "1.0"
+tokio = { version = "0.2", features = ["macros"]}
+warp = "0.2"

@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
-pub struct DisplayTextRequest {
-    pub text: String,
-}
+pub mod jobs;
 
-#[derive(Deserialize, Serialize)]
-pub struct DisplayTextResponse {
-    pub message: String,
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(tag = "type")]
+pub enum TaskMessage {
+    DisplayText { text: String },
+    Circles { r: u8, g: u8, b: u8 },
+    Stop {},
 }

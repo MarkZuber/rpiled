@@ -1,4 +1,4 @@
-use core::{DisplayTextRequest, DisplayTextResponse};
+use core::TaskMessage;
 
 pub struct LedCli {
     client: reqwest::Client,
@@ -14,37 +14,28 @@ impl LedCli {
         }
     }
 
-    // pub async fn hello(&self, name: &str, age: i32) -> Result<String, reqwest::Error> {
-    //     let uri = format!("{}/hello/{}/{}", self.base_addr, name, age);
-    //     let res = self.client.get(&uri).send().await?;
-    //     let body = res.text().await?;
-    //     Ok(body)
-    // }
-
-    pub async fn display_text(&self, message: &str) -> Result<DisplayTextResponse, reqwest::Error> {
-        let req = DisplayTextRequest {
-            text: message.into(),
-        };
-
-        self.display_text_payload(&req).await
+    pub async fn display_text(&self, message: &str) -> Result<(), reqwest::Error> {
+        self.json_request(&TaskMessage::DisplayText {
+            text: message.to_string(),
+        })
+        .await
     }
 
-    pub async fn display_text_payload(
-        &self,
-        request: &DisplayTextRequest,
-    ) -> Result<DisplayTextResponse, reqwest::Error> {
-        self.json_request("displaytext", request).await
+    pub async fn draw_circles(&self, r: u8, g: u8, b: u8) -> Result<(), reqwest::Error> {
+        self.json_request(&TaskMessage::Circles { r, g, b }).await
     }
 
-    async fn json_request<REQ: serde::Serialize, RESP: serde::de::DeserializeOwned>(
+    pub async fn stop_task(&self) -> Result<(), reqwest::Error> {
+        self.json_request(&TaskMessage::Stop {}).await
+    }
+
+    async fn json_request<REQ: serde::Serialize>(
         &self,
-        method: &str,
         request: &REQ,
-    ) -> Result<RESP, reqwest::Error> {
-        let uri = format!("{}/{}", self.base_addr, method);
-        let res = self.client.post(&uri).json(&request).send().await?;
-        let response: RESP = res.json().await?;
-        Ok(response)
+    ) -> Result<(), reqwest::Error> {
+        let uri = format!("{}/{}", self.base_addr, "execute");
+        self.client.post(&uri).json(&request).send().await?;
+        Ok(())
     }
 }
 

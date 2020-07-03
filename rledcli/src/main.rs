@@ -1,19 +1,31 @@
-// use core::DisplayTextRequest;
-
 mod ledcli;
+
+use std::{thread, time};
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
-    let lcli = ledcli::new("http://ledpi.local:8000");
-    let resp = lcli.display_text("well now we're talking").await.unwrap();
-    println!("resp = {:?}", resp.message);
+    let lcli = ledcli::new("http://localhost:8000");
+    let delay_secs = 1;
+    // let phrases = vec![
+    //     "well now we're talking",
+    //     "some other message",
+    //     "more message",
+    //     "the last message",
+    // ];
 
-    // let bodycli = lcli.hello("dr zube", 49).await.unwrap();
-    // println!("bodycli = {:?}", bodycli);
-    // let req = DisplayTextRequest {
-    //     text: "hey thats something".into(),
-    // };
-    // let resp = lcli.display_text_payload(&req).await.unwrap();
+    // for phrase in phrases {
+    //     println!("Sending: {}", phrase);
+    //     lcli.display_text(phrase).await.unwrap();
+    //     thread::sleep(time::Duration::from_secs(delay_secs));
+    // }
+
+    for i in 0_u8..255_u8 {
+        lcli.draw_circles(i, i, i).await.unwrap();
+        thread::sleep(time::Duration::from_secs(delay_secs));
+    }
+
+    println!("stopping...");
+    lcli.stop_task().await.unwrap();
 
     Ok(())
 }
