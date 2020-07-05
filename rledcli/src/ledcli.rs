@@ -15,10 +15,27 @@ impl LedCli {
         }
     }
 
-    #[allow(dead_code)]
     pub async fn display_text(&self, text_blocks: &Vec<TextBlock>) -> Result<(), reqwest::Error> {
         self.json_request(&TaskMessage::DisplayText {
             text_blocks: text_blocks.clone(),
+        })
+        .await
+    }
+
+    pub async fn scroll_text(
+        &self,
+        text_blocks: &Vec<TextBlock>,
+        x_delta: i32,
+        y_delta: i32,
+        num_steps: i32,
+        frame_millis: u64,
+    ) -> Result<(), reqwest::Error> {
+        self.json_request(&TaskMessage::ScrollText {
+            text_blocks: text_blocks.clone(),
+            x_delta,
+            y_delta,
+            num_steps,
+            frame_millis,
         })
         .await
     }

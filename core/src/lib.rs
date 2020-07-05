@@ -16,7 +16,20 @@ pub struct TextBlock {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type")]
 pub enum TaskMessage {
-    DisplayText { text_blocks: Vec<TextBlock> },
-    Circles { r: u8, g: u8, b: u8 },
+    DisplayText {
+        text_blocks: Vec<TextBlock>,
+    },
+    ScrollText {
+        text_blocks: Vec<TextBlock>,
+        x_delta: i32,
+        y_delta: i32,
+        num_steps: i32,
+        frame_millis: u64,
+    },
+    Circles {
+        r: u8,
+        g: u8,
+        b: u8,
+    },
     Stop {},
 }
