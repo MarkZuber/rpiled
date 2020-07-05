@@ -1,4 +1,5 @@
 use core::TaskMessage;
+use core::TextBlock;
 
 pub struct LedCli {
     client: reqwest::Client,
@@ -15,24 +16,9 @@ impl LedCli {
     }
 
     #[allow(dead_code)]
-    pub async fn display_text(
-        &self,
-        font_path: &str,
-        message: &str,
-        x: i32,
-        y: i32,
-        r: u8,
-        g: u8,
-        b: u8,
-    ) -> Result<(), reqwest::Error> {
+    pub async fn display_text(&self, text_blocks: &Vec<TextBlock>) -> Result<(), reqwest::Error> {
         self.json_request(&TaskMessage::DisplayText {
-            font_path: font_path.to_string(),
-            text: message.to_string(),
-            x,
-            y,
-            r,
-            g,
-            b,
+            text_blocks: text_blocks.clone(),
         })
         .await
     }

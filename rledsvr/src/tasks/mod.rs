@@ -10,15 +10,9 @@ use core::TaskMessage;
 
 pub fn spawn_task_from_message(msg: &TaskMessage) -> Handle<TaskError> {
     return match msg {
-        TaskMessage::DisplayText {
-            font_path,
-            text,
-            x,
-            y,
-            r,
-            g,
-            b,
-        } => DisplayTextTask::new(font_path, text, *x, *y, *r, *g, *b).spawn(),
+        TaskMessage::DisplayText { text_blocks } => {
+            DisplayTextTask::new(text_blocks.clone()).spawn()
+        }
         TaskMessage::Circles { r, g, b } => CirclesTask::new(*r, *g, *b).spawn(),
         _ => EmptyTask::new().spawn(),
     };

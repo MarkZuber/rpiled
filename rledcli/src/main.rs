@@ -1,20 +1,67 @@
 mod ledcli;
 
+use core::TextBlock;
 use std::{thread, time};
+
+async fn scroll_text(lcli: &ledcli::LedCli) -> Result<(), reqwest::Error> {
+    let mut blocks = vec![
+        TextBlock {
+            font_path: "/home/pi/rledsvr/content/fonts/4x6.bdf".to_string(),
+            text: "Test Message".to_string(),
+            x: 10,
+            y: 10,
+            r: 255,
+            g: 0,
+            b: 0,
+        },
+        TextBlock {
+            font_path: "/home/pi/rledsvr/content/fonts/5x7.bdf".to_string(),
+            text: "Something Else".to_string(),
+            x: 10,
+            y: 20,
+            r: 0,
+            g: 0,
+            b: 255,
+        },
+    ];
+
+    for _ in 0..30_i32 {
+        lcli.display_text(&blocks).await.unwrap();
+        for (_, val) in blocks.iter_mut().enumerate() {
+            val.x = val.x - 1
+        }
+        thread::sleep(time::Duration::from_millis(100));
+    }
+
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
     let lcli = ledcli::new("http://192.168.2.235:8000");
 
-    lcli.display_text(
-        "/home/pi/rledsvr/content/fonts/4x6.bdf",
-        "Test Message",
-        10,
-        10,
-        255,
-        0,
-        0,
-    )
+    scroll_text(&lcli).await?;
+
+    lcli.display_text(&vec![
+        TextBlock {
+            font_path: "/home/pi/rledsvr/content/fonts/4x6.bdf".to_string(),
+            text: "Test Message".to_string(),
+            x: 10,
+            y: 10,
+            r: 255,
+            g: 0,
+            b: 0,
+        },
+        TextBlock {
+            font_path: "/home/pi/rledsvr/content/fonts/5x7.bdf".to_string(),
+            text: "Something Else".to_string(),
+            x: 10,
+            y: 20,
+            r: 0,
+            g: 0,
+            b: 255,
+        },
+    ])
     .await
     .unwrap();
     thread::sleep(time::Duration::from_secs(10));
