@@ -48,6 +48,24 @@ impl Drop for MatrixFont {
     }
 }
 
+pub struct FontHolder {
+    font: Arc<Mutex<MatrixFont>>,
+}
+
+impl FontHolder {
+    pub fn new(font_file_path: &str) -> Self {
+        Self {
+            font: Arc::new(Mutex::new(MatrixFont::new(font_file_path))),
+        }
+    }
+
+    pub fn lock_font(&mut self) -> MutexGuard<MatrixFont> {
+        self.font.lock().unwrap()
+    }
+}
+
+unsafe impl Send for FontHolder {}
+
 pub struct MatrixHolder {
     matrix: Arc<Mutex<LedMatrix>>,
 }

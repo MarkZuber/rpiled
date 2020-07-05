@@ -6,6 +6,19 @@ use std::{thread, time};
 async fn main() -> Result<(), reqwest::Error> {
     let lcli = ledcli::new("http://192.168.2.235:8000");
 
+    lcli.display_text(
+        "/home/pi/rledsvr/content/fonts/4x6.bdf",
+        "Test Message",
+        10,
+        10,
+        255,
+        0,
+        0,
+    )
+    .await
+    .unwrap();
+    thread::sleep(time::Duration::from_secs(10));
+
     let step_value = 50;
 
     for i in (0_u8..255_u8).step_by(step_value) {
