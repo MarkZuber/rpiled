@@ -13,9 +13,9 @@ pub struct CirclesTask {
 }
 
 impl CirclesTask {
-    pub fn new(r: u8, g: u8, b: u8) -> Self {
+    pub fn new(matrix: &MatrixHolder, r: u8, g: u8, b: u8) -> Self {
         Self {
-            matrix: MatrixHolder::new(),
+            matrix: matrix.clone(),
             counter: 0,
             x: 0,
             y: 16,

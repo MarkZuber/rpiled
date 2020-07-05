@@ -66,6 +66,7 @@ impl FontHolder {
 
 unsafe impl Send for FontHolder {}
 
+#[derive(Clone)]
 pub struct MatrixHolder {
     matrix: Arc<Mutex<LedMatrix>>,
 }

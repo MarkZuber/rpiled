@@ -1,6 +1,7 @@
 use crate::tasks::spawn_task_from_message;
 use core::jobs::{Cancellable, Handle, LoopState};
 use core::TaskMessage;
+use rpiledbind::MatrixHolder;
 use std::sync::mpsc;
 use std::sync::mpsc::{Receiver, SendError, Sender};
 use std::sync::Mutex;
@@ -69,6 +70,7 @@ impl TaskManager {
 pub struct TaskService {
     rx: Receiver<TaskMessage>,
     current_task_handle: Option<Handle<TaskError>>,
+    matrix: MatrixHolder,
 }
 
 impl TaskService {
@@ -76,6 +78,7 @@ impl TaskService {
         Self {
             rx,
             current_task_handle: None,
+            matrix: MatrixHolder::new(),
         }
     }
 }
@@ -92,7 +95,7 @@ impl Cancellable for TaskService {
                     current_task.wait().unwrap();
                 }
 
-                let next_task_handle = spawn_task_from_message(&msg);
+                let next_task_handle = spawn_task_from_message(&self.matrix, &msg);
                 self.current_task_handle = Some(next_task_handle);
             }
             Err(_) => {} // timed out

@@ -10,9 +10,9 @@ pub struct DisplayTextTask {
 }
 
 impl DisplayTextTask {
-    pub fn new(text_blocks: Vec<TextBlock>) -> Self {
+    pub fn new(matrix: &MatrixHolder, text_blocks: Vec<TextBlock>) -> Self {
         Self {
-            matrix: MatrixHolder::new(),
+            matrix: matrix.clone(),
             text_blocks: text_blocks,
         }
     }
@@ -22,6 +22,7 @@ impl Cancellable for DisplayTextTask {
     type Error = TaskError;
     fn for_each(&mut self) -> Result<LoopState, Self::Error> {
         let mut matrix = self.matrix.lock_matrix();
+        matrix.clear();
 
         let kerning_offset: i32 = 0;
 

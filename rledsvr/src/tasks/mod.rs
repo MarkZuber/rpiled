@@ -3,17 +3,18 @@ mod displaytext;
 
 use self::displaytext::DisplayTextTask;
 use crate::tasks::circles::CirclesTask;
+use rpiledbind::MatrixHolder;
 
 use crate::taskmgr::TaskError;
 use core::jobs::{Cancellable, Handle, LoopState};
 use core::TaskMessage;
 
-pub fn spawn_task_from_message(msg: &TaskMessage) -> Handle<TaskError> {
+pub fn spawn_task_from_message(matrix: &MatrixHolder, msg: &TaskMessage) -> Handle<TaskError> {
     return match msg {
         TaskMessage::DisplayText { text_blocks } => {
-            DisplayTextTask::new(text_blocks.clone()).spawn()
+            DisplayTextTask::new(matrix, text_blocks.clone()).spawn()
         }
-        TaskMessage::Circles { r, g, b } => CirclesTask::new(*r, *g, *b).spawn(),
+        TaskMessage::Circles { r, g, b } => CirclesTask::new(matrix, *r, *g, *b).spawn(),
         _ => EmptyTask::new().spawn(),
     };
 }
