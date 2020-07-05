@@ -9,8 +9,8 @@ Type=simple
 Restart=always
 RestartSec=10 
 SyslogIdentifier=rledsvr
-ExecStart=/var/rpiled/rledsvr
-WorkingDirectory=/var/rpiled
+ExecStart=/home/pi/rledsvr/rledsvr
+WorkingDirectory=/home/pi/rledsvr
 PrivateTmp=true
 
 [Install]
