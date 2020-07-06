@@ -31,20 +31,28 @@ pub fn spawn_task_from_message(matrix: &MatrixHolder, msg: &TaskMessage) -> Hand
             *frame_millis,
         )
         .spawn(),
-        TaskMessage::Circles { r, g, b } => CirclesTask::new(matrix, *r, *g, *b).spawn(),
-        _ => EmptyTask::new().spawn(),
+        TaskMessage::Circles {} => CirclesTask::new(matrix).spawn(),
+        _ => EmptyTask::new(matrix).spawn(),
     };
 }
 
-pub struct EmptyTask {}
+pub struct EmptyTask {
+    matrix: MatrixHolder,
+}
+
 impl EmptyTask {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(matrix: &MatrixHolder) -> Self {
+        Self {
+            matrix: matrix.clone(),
+        }
     }
 }
 impl Cancellable for EmptyTask {
     type Error = TaskError;
     fn for_each(&mut self) -> Result<LoopState, Self::Error> {
+        let mut matrix = self.matrix.lock_matrix();
+        matrix.clear();
+        matrix.swap_canvas();
         Ok(LoopState::Break)
     }
 }

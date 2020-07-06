@@ -26,10 +26,6 @@ pub enum TaskMessage {
         num_steps: i32,
         frame_millis: u64,
     },
-    Circles {
-        r: u8,
-        g: u8,
-        b: u8,
-    },
+    Circles {},
     Stop {},
 }

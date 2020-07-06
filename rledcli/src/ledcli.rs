@@ -40,8 +40,8 @@ impl LedCli {
         .await
     }
 
-    pub async fn draw_circles(&self, r: u8, g: u8, b: u8) -> Result<(), reqwest::Error> {
-        self.json_request(&TaskMessage::Circles { r, g, b }).await
+    pub async fn draw_circles(&self) -> Result<(), reqwest::Error> {
+        self.json_request(&TaskMessage::Circles {}).await
     }
 
     pub async fn stop_task(&self) -> Result<(), reqwest::Error> {
