@@ -75,10 +75,12 @@ pub struct TaskService {
 
 impl TaskService {
     fn new(rx: Receiver<TaskMessage>) -> Self {
+        let mut matrix = MatrixHolder::new();
+        matrix.lock_matrix().set_brightness(30);
         Self {
             rx,
             current_task_handle: None,
-            matrix: MatrixHolder::new(),
+            matrix,
         }
     }
 }

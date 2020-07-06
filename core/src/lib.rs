@@ -19,6 +19,9 @@ pub enum TaskMessage {
     DisplayText {
         text_blocks: Vec<TextBlock>,
     },
+    DisplayImage {
+        image_path: String, // path on the rpi
+    },
     ScrollText {
         text_blocks: Vec<TextBlock>,
         x_delta: i32,

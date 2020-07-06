@@ -6,6 +6,7 @@ mod ledcli;
 
 use clap::{App, SubCommand};
 use core::TextBlock;
+use std::{thread, time};
 
 async fn scroll_text_onboard(lcli: &ledcli::LedCli) -> Result<(), reqwest::Error> {
     let blocks = vec![
@@ -52,6 +53,7 @@ async fn main() -> Result<(), reqwest::Error> {
         .subcommand(SubCommand::with_name("stop").about("Stops running display code on board"))
         .subcommand(SubCommand::with_name("circles").about("Displays some circles"))
         .subcommand(SubCommand::with_name("scroll").about("Scrolls text"))
+        .subcommand(SubCommand::with_name("image").about("Shows Image"))
         .get_matches();
 
     let lcli = ledcli::new("http://192.168.2.235:8000");
@@ -62,6 +64,16 @@ async fn main() -> Result<(), reqwest::Error> {
         lcli.draw_circles().await.unwrap();
     } else if let Some(_) = matches.subcommand_matches("scroll") {
         scroll_text_onboard(&lcli).await.unwrap();
+    } else if let Some(_) = matches.subcommand_matches("image") {
+        let images = vec![
+            "/home/pi/pixelart/lake.png".to_string(),
+            "/home/pi/pixelart/pixelnight.png".to_string(),
+            "/home/pi/pixelart/restaurant.jpeg".to_string(),
+        ];
+        for image in images {
+            lcli.display_image(&image).await.unwrap();
+            thread::sleep(time::Duration::from_millis(5000));
+        }
     } else {
         println!("No matching subcommand found, doing nothing...");
     }

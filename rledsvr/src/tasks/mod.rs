@@ -1,9 +1,13 @@
+extern crate image;
+
 mod circles;
+mod displayimage;
 mod displaytext;
 mod scrolltext;
 
 use self::displaytext::DisplayTextTask;
 use crate::tasks::circles::CirclesTask;
+use crate::tasks::displayimage::DisplayImageTask;
 use crate::tasks::scrolltext::ScrollTextTask;
 use rpiledbind::MatrixHolder;
 
@@ -15,6 +19,9 @@ pub fn spawn_task_from_message(matrix: &MatrixHolder, msg: &TaskMessage) -> Hand
     return match msg {
         TaskMessage::DisplayText { text_blocks } => {
             DisplayTextTask::new(matrix, text_blocks.clone()).spawn()
+        }
+        TaskMessage::DisplayImage { image_path } => {
+            DisplayImageTask::new(matrix, image_path).spawn()
         }
         TaskMessage::ScrollText {
             text_blocks,

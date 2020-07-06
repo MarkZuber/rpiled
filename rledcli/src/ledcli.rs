@@ -22,6 +22,13 @@ impl LedCli {
         .await
     }
 
+    pub async fn display_image(&self, image_path: &str) -> Result<(), reqwest::Error> {
+        self.json_request(&TaskMessage::DisplayImage {
+            image_path: image_path.to_string(),
+        })
+        .await
+    }
+
     pub async fn scroll_text(
         &self,
         text_blocks: &Vec<TextBlock>,
